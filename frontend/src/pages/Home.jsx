@@ -1,19 +1,22 @@
-import React from 'react'
-import { getQuery, getWeather, getAdvisory } from '../utils/api'
+import React from 'react';
+import ReactMarkdown from 'react-markdown';
+import { getQuery, getWeather, getAdvisory } from '../utils/api';
 
-export default function Home(){
-  const [prompt, setPrompt] = React.useState('')
-  const [city, setCity] = React.useState('')
-  const [crop, setCrop] = React.useState('')
-  const [result, setResult] = React.useState(null)
-  const [loading, setLoading] = React.useState(false)
+export default function Home() {
+  const [prompt, setPrompt] = React.useState('');
+  const [city, setCity] = React.useState('');
+  const [crop, setCrop] = React.useState('');
+  const [result, setResult] = React.useState([]); // 🆕 array of chat history
+  const [loading, setLoading] = React.useState(false);
 
   async function handleQuery() {
     if (!prompt) return alert("Type a question or prompt");
     setLoading(true);
     try {
       const res = await getQuery(prompt);
-      setResult(res); // still storing { query, advice }
+      // Add new query at the start of history
+      setResult(res.history);
+      setPrompt(''); // clear input
     } catch (e) {
       alert("Error: " + e.message);
     } finally {
@@ -21,14 +24,18 @@ export default function Home(){
     }
   }
 
-  async function handleWeather(){
-    if(!city) return alert('Provide City please')
-    setLoading(true)
-    try{
-      const res = await getWeather(city)
-      setResult(res)
-    }catch(e){alert('Error: '+e.message)}
-    finally{setLoading(false)}
+  async function handleWeather() {
+    if (!city) return alert('Provide City please');
+    setLoading(true);
+    try {
+      const res = await getWeather(city);
+      // Optional: you can store weather in a separate array if needed
+      alert(`Weather in ${res.location.name}: ${res.current.temp_c}°C, ${res.current.condition.text}`);
+    } catch (e) {
+      alert('Error: ' + e.message);
+    } finally {
+      setLoading(false);
+    }
   }
 
   return (
@@ -50,9 +57,7 @@ export default function Home(){
             onChange={e => setPrompt(e.target.value)}
             placeholder='type your prompt here'
             onKeyDown={e => {
-              if (e.key === "Enter" && !loading) {
-                handleQuery();
-              }
+              if (e.key === "Enter" && !loading) handleQuery();
             }}
           />
           <button className='send' onClick={handleQuery} disabled={loading}>➤</button>
@@ -64,43 +69,29 @@ export default function Home(){
             onChange={e => setCity(e.target.value)}
             placeholder='City (for weather)'
             onKeyDown={e => {
-              if (e.key === "Enter" && !loading) {
-                handleWeather();
-              }
+              if (e.key === "Enter" && !loading) handleWeather();
             }}
           />
-          {/* <input value={crop} onChange={e=>setCrop(e.target.value)} placeholder='Crop (for advisory)' /> */}
           <button onClick={handleWeather} disabled={loading}>Get Weather Forecast</button>
         </div>
 
-        {/* 🔄 This block now handles BOTH query and weather responses */}
-        {result && (
+        {/* 🔄 Chat History */}
+        {result.length > 0 && (
           <div className="chat-box">
-            {"query" in result && (
-              <>
+            {result.map((entry, idx) => (
+              <React.Fragment key={idx}>
                 <div className="user-msg">
-                  <span>🧑‍🌾 {result.query}</span>
+                  <span>🧑‍🌾 {entry.query}</span>
                 </div>
                 <div className="bot-msg">
-                  <span>🤖 {result.advice}</span>
+                  <ReactMarkdown>{entry.advice}</ReactMarkdown>
                 </div>
-              </>
-            )}
-
-            {"location" in result && (
-              <div className="weather-box">
-                <h3>🌤 Weather in {result.location.name}, {result.location.region}</h3>
-                <p>Temperature: {result.current.temp_c}°C ({result.current.temp_f}°F)</p>
-                <p>Condition: {result.current.condition.text}</p>
-                <p>Humidity: {result.current.humidity}%</p>
-                <p>Wind: {result.current.wind_kph} km/h {result.current.wind_dir}</p>
-                <p>Feels Like: {result.current.feelslike_c}°C</p>
-              </div>
-            )}
+              </React.Fragment>
+            ))}
           </div>
         )}
 
       </div>
     </div>
-  )
+  );
 }

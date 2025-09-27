@@ -74,6 +74,56 @@ body,html,#root{height:100%;margin:0}
   box-shadow: 0 2px 6px rgba(0,0,0,0.1);
 }
 
+/* Make chat-box scrollable if content is long */
+.bot-msg {
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+  max-width: 900px;
+  margin: 20px auto;
+  max-height: 450px; /* 🆕 maximum height */
+  overflow-y: auto;  /* 🆕 enable vertical scroll */
+  padding: 10px;
+  border-radius: 12px;
+  background: #fafafa;
+  box-shadow: 0 4px 12px rgba(0,0,0,0.05);
+}
+
+/* Scrollbar styling (optional, nice touch) */
+.bot-msg::-webkit-scrollbar {
+  width: 6px;
+}
+
+.bot-msg::-webkit-scrollbar-thumb {
+  background-color: #7c3aed; /* accent color */
+  border-radius: 3px;
+}
+
+.bot-msg::-webkit-scrollbar-track {
+  background: #f0f0f0;
+}
+
+.user-msg {
+  background: #e0f7e9;
+  padding: 10px 14px;
+  border-radius: 16px;
+  align-self: flex-start;
+  max-width: 75%;
+  text-align: right;
+  box-shadow: 0 2px 6px rgba(0,0,0,0.1);
+}
+
+.bot-msg {
+  background: #f1f1f1;
+  padding: 10px 14px;
+  border-radius: 16px;
+  align-self: flex-end;
+  max-width: 75%;
+  text-align: left;
+  box-shadow: 0 2px 6px rgba(0,0,0,0.1);
+}
+
+
 /* -----------------------------
    Community post styles
 --------------------------------*/
