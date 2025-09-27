@@ -38,8 +38,62 @@ body,html,#root{height:100%;margin:0}
 .advisory-row button:hover {background-color: #4c1d95;transform: translateY(-1px);}
 .advisory-row button:disabled {opacity: 0.5;cursor: not-allowed;}
 
-
 .dashboard .grid{display:grid;grid-template-columns:1fr 420px;gap:28px;align-items:start}
 .card{background:linear-gradient(180deg, rgba(255,255,255,0.8), rgba(250,250,250,0.8));padding:18px;border-radius:16px;box-shadow:0 6px 18px rgba(0,0,0,0.06)}
 .card.large{grid-row:span 2;min-height:460px}
 .card-title{background:#2f2f2f;color:#fff;padding:8px 12px;border-radius:10px;display:inline-block;margin-bottom:12px}
+
+/* -----------------------------
+   Chat styles for Home.jsx
+--------------------------------*/
+.chat-box {
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+  max-width: 900px;
+  margin: 20px auto;
+}
+
+.user-msg {
+  background: #e0f7e9;
+  padding: 10px 14px;
+  border-radius: 16px;
+  align-self: flex-start;
+  max-width: 75%;
+  text-align: right;
+  box-shadow: 0 2px 6px rgba(0,0,0,0.1);
+}
+
+.bot-msg {
+  background: #f1f1f1;
+  padding: 10px 14px;
+  border-radius: 16px;
+  align-self: flex-end;
+  max-width: 75%;
+  text-align: left;
+  box-shadow: 0 2px 6px rgba(0,0,0,0.1);
+}
+
+/* -----------------------------
+   Community post styles
+--------------------------------*/
+.post-card {
+  background: #fff;
+  border: 1px solid #eee;
+  border-radius: 16px;
+  padding: 16px;
+  text-align: left;
+  box-shadow: 0 4px 10px rgba(0,0,0,0.05);
+}
+
+.post-header {
+  color: var(--accent);
+  font-weight: 600;
+  margin-bottom: 8px;
+}
+
+.post-content {
+  color: #333;
+  font-size: 15px;
+  line-height: 1.5;
+}
