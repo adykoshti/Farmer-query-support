@@ -22,9 +22,17 @@ Farmer's question: ${question}
     `;
 
     const result = await model.generateContent(prompt);
-    return result.response.text();
+    let text = result.response.text();
+
+    // ✅ NEW: fallback if response is empty
+    if (!text || text.trim() === "") {
+      text = "⚠️ ക്ഷമിക്കണം, ഇപ്പോൾ ഞാൻ മറുപടി നൽകാനാകുന്നില്ല. ദയവായി വീണ്ടും ശ്രമിക്കുക.";
+    }
+
+    return text;
   } catch (err) {
     console.error("Gemini API Error:", err);
-    throw new Error("Failed to fetch response from Gemini");
+    // ✅ NEW: return safe fallback instead of throwing
+    return "⚠️ AI സേവനം ഇപ്പോൾ ലഭ്യമല്ല. പിന്നീട് ശ്രമിക്കുക.";
   }
 }

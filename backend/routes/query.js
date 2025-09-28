@@ -1,31 +1,27 @@
 import express from "express";
 import { askGemini } from "../services/geminiService.js";
+import { history } from "./historyStore.js";
 
 const router = express.Router();
 
-// 🆕 In-memory history for this session
-const history = [];
-
-// Handle new query
+// Handle AI queries
 router.get("/", async (req, res) => {
   try {
     const { question } = req.query;
-    if (!question) return res.status(400).json({ error: "Question required" });
+    if (!question) return res.json({ history });
 
     const advice = await askGemini(question);
+    const entry = { type: "ai", query: question, advice };
+    history.unshift(entry);
 
-    // 🆕 store in history
-    const entry = { query: question, advice };
-    history.unshift(entry); // most recent first
-
-    res.json({ history }); // return full history
+    res.json({ history });
   } catch (error) {
     console.error(error);
     res.status(500).json({ error: error.message });
   }
 });
 
-// 🆕 Fetch saved history (for page refresh)
+// Optional: fetch full history
 router.get("/history", (req, res) => {
   res.json({ history });
 });
